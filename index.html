@@ -1,168 +1,23 @@
-const canvas = document.getElementById("myCanvas")
-const context = canvas.getContext("2d")
+<!DOCTYPE html>
 
-const scoreDisplay = document.getElementById("myScore")
-const scoreContext = scoreDisplay.getContext("2d")
+<head>
+    <title>Block Game</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- I am using a general HTML Document settings template as I don't really need to change these-->
 
-document.body.style.zoom = screen.height / 11 + "%" /*Zooms user's POV */
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="height=device-height, initial-scale=1.0">
+</head>
 
-let score, velocity, running, bestScore = 0
-let player = {
-    x: 100,
-    y: 350,
-    width: 50,
-    height: 100
-}
-let cactus = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-}
+<body>
+    <div id="gameContainer">
+        <!--my prefix used to mark elements belonging to the gameContainer div for greater ease-->
 
-let jumpSound = new Audio("jump.mp3")
-let loseSound = new Audio("lose.mp3")
+        <canvas id="myCanvas" height="550" width="700"></canvas>
+        <canvas id="myScore" height="100" width="100"></canvas>
+    </div>
 
-context.font = "30px Monospace"
-context.fillStyle = "black"
-context.textAlign = "center"
-context.fillText("Click to start", 350, 250)
-/*Starting Text */
-
-
-canvas.addEventListener("click", event => {
-    if(running != true){
-        Initialize()
-        console.log("start")
-    }
-})
-/*Awaits user input to begin */
-
-/*These 2 event listeners wait for keyboard or click input from the user and change the bird's y coordinate if the game is running*/
-window.addEventListener("keyup", event => {
-    if((event.code == "Space" || event.code == "ArrowUp") && running == true){
-        if (player.y == 350){
-            jumpSound.play()
-            player.y -= 200
-        }
-    }
-})
-canvas.addEventListener("click", event => {
-    if (player.y == 350){
-        jumpSound.play()
-        player.y -= 200
-    }
-})
-
-function Initialize(){
-    score = 0 /*Resets score */
-
-    /*Resets Score Box */
-    scoreDisplay.style.display = "block"
-    scoreContext.font = "32px Permanent Marker, Cursive"
-    scoreContext.fillStyle = "rgb(48, 48, 48)"
-    scoreContext.fillRect(0, 0, 100, 100)
-    scoreContext.fillStyle = "white"
-    scoreContext.textAlign = "center"
-
-
-    scoreContext.fillText(`${score}`, 50, 50)
-
-    /*Initializes game */
-    running = true
-    createCactus()
-    clearCanvas()
-    drawPlayer()
-    nextFrame()
-}
-
-function nextFrame(){
-    const Interval = setInterval(update, 100)
-    function update(){
-        if (running == true){
-            if (player.y < 350){
-                velocity = Math.sqrt(19.6*(300 - (300 - player.y)))
-                velocity = velocity / 5
-                if (player.y + velocity < 350){
-                    player.y = player.y + velocity
-                }
-                else{
-                    player.y = 350
-                }
-                
-                /*Velocity calculated and adjusted for game by me */
-            }
-            score += 1
-            cactus.x -= 25 + (score / 100)
-            if (cactus.x <= 0){
-                createCactus()
-            }
-            console.log(player.y)
-            checkOver()
-            clearCanvas()
-            drawPlayer()
-            drawCactus()
-            updateScore()
-        }
-        else{
-            clearInterval(Interval)
-            console.log("Program stopped")
-        }
-    }
-}
-function createCactus(){
-    cactus.x = 700
-    cactus.y = 450
-    function createRandom(){
-        return Math.floor(Math.random() * (5))
-        /*Generates random integer number between 0 (included) and 25 (excluded)*/
-    }
-    cactus.height = 50 + (createRandom() * 10)
-    cactus.width = 50 + (createRandom() * 5)
-    console.log(cactus.height, cactus.width)
-}
-
-function drawCactus(){
-    context.fillStyle = "rgb(91, 111, 85)"
-    context.strokeStyle = "black"
-    context.fillRect(cactus.x, cactus.y, cactus.width, -cactus.height)
-
-    /*Creates cactus outline*/
-    context.strokeRect(cactus.x, cactus.y, cactus.width, -cactus.height)
-}
-function clearCanvas(){
-    context.fillStyle = "skyblue"
-    context.fillRect(0, 0, 800, 450)
-
-    context.fillStyle = "rgb(224, 222, 96)"
-    context.fillRect(0, 450, 800, 100)
-}
-
-function drawPlayer(){
-    context.fillStyle = "purple"
-    context.fillRect(player.x, player.y, player.width, player.height)
-}
-
-function updateScore(){
-    /*Resets and writes on the mini canvas, dedicated for score display */
-    scoreContext.fillStyle = "rgb(48, 48, 48)"
-    scoreContext.fillRect(0, 0, 100, 100)
-
-    scoreContext.font = "32px Permanent Marker, Cursive"
-    scoreContext.fillStyle = "white"
-    scoreContext.textAlign = "center"
-    scoreContext.fillText(`${score}`, 50, 50)
-}
-
-function checkOver(){
-    if (cactus.x <= 150 && (cactus.x + cactus.width) >= 100)
-    {
-        console.log("Detect")
-        if ((player.y + player.height) > (450 - cactus.height)){
-            running = false
-            console.log("Game over")
-            loseSound.play()
-        }
-        
-    }
-}
+    <script src="script.js"></script>
+</body>
