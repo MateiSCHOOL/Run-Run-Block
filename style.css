@@ -1,0 +1,34 @@
+html { height: 100% }
+body { min-height: 100%; background-color: rgb(48, 48, 48);}
+
+#myCanvas{
+    background-color: skyblue;
+    display: block;
+    border: 2px solid;
+    margin:auto;
+}
+
+#myScore{
+    background-color: rgb(48, 48, 48);
+    margin:auto;
+    display: none;
+}
+
+#myDifficulties{
+    height: 50px;
+    width:500px;
+    border:2px solid;
+    margin:auto;
+    display:grid;
+    grid-template-columns: repeat(3, auto);
+}
+
+.difficulty{
+    height:50px;
+    width:166.6px;
+    margin:auto;
+    font-size: 24px;
+    font-family: Permanent Marker, cursive;
+    text-align: center;
+    cursor: pointer;
+}
