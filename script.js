@@ -9,7 +9,7 @@ document.body.style.zoom = screen.height / 11 + "%" /*Zooms user's POV */
 let score, velocity, running, bestScore = 0
 let player = {
     x: 100,
-    y: 600,
+    y: 350,
     width: 50,
     height: 100
 }
@@ -23,7 +23,7 @@ let cactus = {
 context.font = "30px Monospace"
 context.fillStyle = "black"
 context.textAlign = "center"
-context.fillText("Click to start", 350, 400)
+context.fillText("Click to start", 350, 250)
 /*Starting Text */
 
 
@@ -38,13 +38,15 @@ canvas.addEventListener("click", event => {
 /*These 2 event listeners wait for keyboard or click input from the user and change the bird's y coordinate if the game is running*/
 window.addEventListener("keyup", event => {
     if((event.code == "Space" || event.code == "ArrowUp") && running == true){
-        if (player.y == 600){
+        if (player.y == 350){
+            console.log("jump")
             player.y -= 200
         }
     }
 })
 canvas.addEventListener("click", event => {
-    if(running == true){
+    if (player.y == 350){
+        console.log("jump")
         player.y -= 200
     }
 })
@@ -75,14 +77,14 @@ function nextFrame(){
     const Interval = setInterval(update, 100)
     function update(){
         if (running == true){
-            if (player.y < 600){
+            if (player.y < 350){
                 velocity = Math.sqrt(19.6*(300 - (300 - player.y)))
                 velocity = velocity / 5
-                if (player.y + velocity < 600){
+                if (player.y + velocity < 350){
                     player.y = player.y + velocity
                 }
                 else{
-                    player.y = 600
+                    player.y = 350
                 }
                 
                 /*Velocity calculated and adjusted for game by me */
@@ -92,8 +94,8 @@ function nextFrame(){
             if (cactus.x <= 0){
                 createCactus()
             }
+            console.log(player.y)
             checkOver()
-
             clearCanvas()
             drawPlayer()
             drawCactus()
@@ -107,7 +109,7 @@ function nextFrame(){
 }
 function createCactus(){
     cactus.x = 700
-    cactus.y = 700
+    cactus.y = 450
     function createRandom(){
         return Math.floor(Math.random() * (5))
         /*Generates random integer number between 0 (included) and 25 (excluded)*/
@@ -127,10 +129,10 @@ function drawCactus(){
 }
 function clearCanvas(){
     context.fillStyle = "skyblue"
-    context.fillRect(0, 0, 700, 700)
+    context.fillRect(0, 0, 800, 450)
 
     context.fillStyle = "rgb(224, 222, 96)"
-    context.fillRect(0, 700, 700, 50)
+    context.fillRect(0, 450, 800, 100)
 }
 
 function drawPlayer(){
@@ -153,7 +155,7 @@ function checkOver(){
     if (cactus.x <= 150 && (cactus.x + cactus.width) >= 100)
     {
         console.log("Detect")
-        if ((player.y + player.height) > (700 - cactus.height)){
+        if ((player.y + player.height) > (450 - cactus.height)){
             running = false
             console.log("Game over")
         }
