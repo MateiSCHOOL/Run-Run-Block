@@ -20,6 +20,9 @@ let cactus = {
     height: 0
 }
 
+let jumpSound = new Audio("jump.mp3")
+let loseSound = new Audio("lose.mp3")
+
 context.font = "30px Monospace"
 context.fillStyle = "black"
 context.textAlign = "center"
@@ -39,14 +42,14 @@ canvas.addEventListener("click", event => {
 window.addEventListener("keyup", event => {
     if((event.code == "Space" || event.code == "ArrowUp") && running == true){
         if (player.y == 350){
-            console.log("jump")
+            jumpSound.play()
             player.y -= 200
         }
     }
 })
 canvas.addEventListener("click", event => {
     if (player.y == 350){
-        console.log("jump")
+        jumpSound.play()
         player.y -= 200
     }
 })
@@ -158,6 +161,7 @@ function checkOver(){
         if ((player.y + player.height) > (450 - cactus.height)){
             running = false
             console.log("Game over")
+            loseSound.play()
         }
         
     }
