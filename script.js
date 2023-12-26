@@ -6,7 +6,7 @@ const scoreContext = scoreDisplay.getContext("2d")
 
 document.body.style.zoom = screen.height / 11 + "%" /*Zooms user's POV */
 
-let score, velocity, running, bestScore = 0
+let score, velocity, running, canStart, bestScore = 0
 let player = {
     x: 100,
     y: 350,
@@ -20,8 +20,31 @@ let cactus = {
     height: 0
 }
 
+let cloud1 = {
+    x: 0,
+    y: 50,
+    width: 100,
+    height: 50
+}
+
+let cloud2 = {
+    x: 0,
+    y: 175,
+    width: 100,
+    height: 50
+}
+
+let cloud3 = {
+    x: 0,
+    y: 300,
+    width: 100,
+    height: 50
+}
+
 let jumpSound = new Audio("jump.mp3")
 let loseSound = new Audio("lose.mp3")
+let cloud = new Image()
+cloud.src = "cloud.png"
 
 context.font = "30px Monospace"
 context.fillStyle = "black"
@@ -31,14 +54,14 @@ context.fillText("Click to start", 350, 250)
 
 
 canvas.addEventListener("click", event => {
-    if(running != true){
-        Initialize()
+    if((running != true) && (canStart != false)){
+        setTimeout(Initialize, 50)
         console.log("start")
     }
 })
 /*Awaits user input to begin */
 
-/*These 2 event listeners wait for keyboard or click input from the user and change the bird's y coordinate if the game is running*/
+/*These 2 event listeners wait for keyboard or click input from the user and change the player's y coordinate if the game is running*/
 window.addEventListener("keyup", event => {
     if((event.code == "Space" || event.code == "ArrowUp") && running == true){
         if (player.y == 350){
@@ -48,7 +71,7 @@ window.addEventListener("keyup", event => {
     }
 })
 canvas.addEventListener("click", event => {
-    if (player.y == 350){
+    if (player.y == 350 && running == true){
         jumpSound.play()
         player.y -= 200
     }
@@ -71,8 +94,10 @@ function Initialize(){
     /*Initializes game */
     running = true
     createCactus()
+    createClouds()
     clearCanvas()
     drawPlayer()
+    drawClouds()
     nextFrame()
 }
 
@@ -82,7 +107,7 @@ function nextFrame(){
         if (running == true){
             if (player.y < 350){
                 velocity = Math.sqrt(19.6*(300 - (300 - player.y)))
-                velocity = velocity / 5
+                velocity = velocity / 6
                 if (player.y + velocity < 350){
                     player.y = player.y + velocity
                 }
@@ -93,15 +118,29 @@ function nextFrame(){
                 /*Velocity calculated and adjusted for game by me */
             }
             score += 1
-            cactus.x -= 25 + (score / 100)
+            cactus.x -= 30 + (score / 100)
             if (cactus.x <= 0){
                 createCactus()
             }
-            console.log(player.y)
+            cloud1.x -= 5
+            cloud2.x -= 5
+            cloud3.x -= 5
+
+            if (cloud1.x <= -100){
+                cloud1.x = 700
+            }
+            if (cloud2.x <= -100){
+                cloud2.x = 700
+            }
+            if (cloud3.x <= -100){
+                cloud3.x = 700
+            }
+
             checkOver()
             clearCanvas()
-            drawPlayer()
             drawCactus()
+            drawClouds()
+            drawPlayer()
             updateScore()
         }
         else{
@@ -115,7 +154,7 @@ function createCactus(){
     cactus.y = 450
     function createRandom(){
         return Math.floor(Math.random() * (5))
-        /*Generates random integer number between 0 (included) and 25 (excluded)*/
+        /*Generates random integer number between 0 (included) and 5 (excluded)*/
     }
     cactus.height = 50 + (createRandom() * 10)
     cactus.width = 50 + (createRandom() * 5)
@@ -143,6 +182,22 @@ function drawPlayer(){
     context.fillRect(player.x, player.y, player.width, player.height)
 }
 
+function createClouds(){
+    function createRandom(){
+        return Math.floor(Math.random() * (8))
+        /*Generates random integer number between 0 (included) and 8 (excluded)*/
+    }
+    cloud1.x = createRandom() * 100
+    cloud2.x = createRandom() * 100
+    cloud3.x = createRandom() * 100
+}
+
+function drawClouds(){
+    context.drawImage(cloud, cloud1.x, cloud1.y, cloud1.width, cloud1.height)
+    context.drawImage(cloud, cloud2.x, cloud2.y, cloud2.width, cloud2.height)
+    context.drawImage(cloud, cloud3.x, cloud3.y, cloud3.width, cloud3.height)
+}
+
 function updateScore(){
     /*Resets and writes on the mini canvas, dedicated for score display */
     scoreContext.fillStyle = "rgb(48, 48, 48)"
@@ -160,9 +215,24 @@ function checkOver(){
         console.log("Detect")
         if ((player.y + player.height) > (450 - cactus.height)){
             running = false
+            canStart = false
             console.log("Game over")
             loseSound.play()
+            clearCanvas()
+            drawPlayer()
+            drawCactus()
+
+            setTimeout(writeLoseText, 500)
         }
         
     }
+}
+
+function writeLoseText(){
+    context.font = "30px Monospace"
+    context.fillStyle = "black"
+    context.textAlign = "center"
+    context.fillText("Game Over", 350, 250)
+    context.fillText("Click to restart", 350, 300)
+    canStart = true
 }
