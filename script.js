@@ -45,6 +45,8 @@ let jumpSound = new Audio("jump.mp3")
 let loseSound = new Audio("lose.mp3")
 let cloud = new Image()
 cloud.src = "cloud.png"
+let cactusimg = new Image()
+cactusimg.src = "cactus.png"
 
 context.font = "30px Monospace"
 context.fillStyle = "black"
@@ -151,29 +153,24 @@ function nextFrame(){
 }
 function createCactus(){
     cactus.x = 700
-    cactus.y = 450
+    cactus.y = 460
     function createRandom(){
         return Math.floor(Math.random() * (5))
         /*Generates random integer number between 0 (included) and 5 (excluded)*/
     }
-    cactus.height = 50 + (createRandom() * 10)
+    cactus.height = 100 + (createRandom() * 10)
     cactus.width = 50 + (createRandom() * 5)
     console.log(cactus.height, cactus.width)
 }
 
 function drawCactus(){
-    context.fillStyle = "rgb(91, 111, 85)"
-    context.strokeStyle = "black"
-    context.fillRect(cactus.x, cactus.y, cactus.width, -cactus.height)
-
-    /*Creates cactus outline*/
-    context.strokeRect(cactus.x, cactus.y, cactus.width, -cactus.height)
+    context.drawImage(cactusimg, cactus.x, cactus.y, cactus.width, -cactus.height)
 }
 function clearCanvas(){
     context.fillStyle = "skyblue"
     context.fillRect(0, 0, 800, 450)
 
-    context.fillStyle = "rgb(224, 222, 96)"
+    context.fillStyle = "rgb(193, 154, 107)"
     context.fillRect(0, 450, 800, 100)
 }
 
@@ -210,18 +207,17 @@ function updateScore(){
 }
 
 function checkOver(){
-    if (cactus.x <= 150 && (cactus.x + cactus.width) >= 100)
+    if (cactus.x <= 140 && (cactus.x + cactus.width) >= 110)
     {
         console.log("Detect")
-        if ((player.y + player.height) > (450 - cactus.height)){
-            running = false
-            canStart = false
+        if ((player.y + player.height) > (460 - cactus.height)){
             console.log("Game over")
             loseSound.play()
             clearCanvas()
             drawPlayer()
             drawCactus()
-
+            running = false
+            canStart = false
             setTimeout(writeLoseText, 500)
         }
         
