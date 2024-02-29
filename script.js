@@ -152,7 +152,6 @@ function nextFrame(){
     }
 }
 function createCactus(){
-    cactus.x = 700
     cactus.y = 460
     function createRandom(){
         return Math.floor(Math.random() * (5))
@@ -161,6 +160,8 @@ function createCactus(){
     cactus.height = 100 + (createRandom() * 10)
     cactus.width = 50 + (createRandom() * 5)
     console.log(cactus.height, cactus.width)
+    cactus.x = 700 + (createRandom() * 200)
+    console.log(cactus.x)
 }
 
 function drawCactus(){
