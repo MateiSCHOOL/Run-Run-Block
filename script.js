@@ -109,7 +109,7 @@ function nextFrame(){
         if (running == true){
             if (player.y < 350){
                 velocity = Math.sqrt(19.6*(300 - (300 - player.y)))
-                velocity = velocity/3
+                velocity = velocity/4
                 if (player.y + velocity < 350){
                     player.y = player.y + velocity
                 }
