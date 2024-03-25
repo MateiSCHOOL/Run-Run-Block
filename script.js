@@ -52,7 +52,7 @@ context.font = "30px Monospace"
 context.fillStyle = "black"
 context.textAlign = "center"
 context.fillText("Click to start", 350, 250)
-context.fillText("Then use clicking/space/up key to jump", 300, 300)
+context.fillText("Then use clicking/space/up key to jump", 325, 300)
 /*Starting Text */
 
 
